@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Calculator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #3b3e5b;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .calculator-container {
+            background-color: #2c2f48;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+            width: 340px;
+        }
+        h1 {
+            text-align: center;
+            color: #ffffff;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+        .display {
+            background-color: #1f2138;
+            color: #ffffff;
+            padding: 20px;
+            font-size: 2.5em;
+            border-radius: 8px;
+            text-align: right;
+            margin-bottom: 20px;
+        }
+        form {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+        input[type="number"] {
+            display: none;
+        }
+        button {
+            padding: 20px;
+            font-size: 1.5em;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px #1a1c2b;
+        }
+        button {
+            background-color: #eaeaea;
+            color: #2c2f48;
+        }
+        button:active {
+            box-shadow: 0 2px #1a1c2b;
+            transform: translateY(4px);
+        }
+        .del {
+            background-color: #7f8cbd;
+            color: white;
+        }
+        .equal {
+            background-color: #f96b6b;
+            color: white;
+            grid-column: span 2;
+        }
+        .reset {
+            background-color: #697c9c;
+            color: white;
+            grid-column: span 2;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator-container">
+        <h1>calculator</h1>
+        <div class="display" id="display">0</div>
+        <form onsubmit="event.preventDefault(); resetCalculator();">
+            <input type="number" name="num1" id="num1" required>
+            <input type="number" name="num2" id="num2" required>
+            <button type="button" onclick="appendNumber(7)">7</button>
+            <button type="button" onclick="appendNumber(8)">8</button>
+            <button type="button" onclick="appendNumber(9)">9</button>
+            <button type="button" class="del" onclick="deleteNumber()">DEL</button>
+            <button type="button" onclick="appendNumber(4)">4</button>
+            <button type="button" onclick="appendNumber(5)">5</button>
+            <button type="button" onclick="appendNumber(6)">6</button>
+            <button type="button" onclick="setOperation('+')">+</button>
+            <button type="button" onclick="appendNumber(1)">1</button>
+            <button type="button" onclick="appendNumber(2)">2</button>
+            <button type="button" onclick="appendNumber(3)">3</button>
+            <button type="button" onclick="setOperation('-')">-</button>
+            <button type="button" onclick="appendNumber('.')">.</button>
+            <button type="button" onclick="appendNumber(0)">0</button>
+            <button type="button" onclick="setOperation('/')">/</button>
+            <button type="button" onclick="setOperation('*')">x</button>
+            <button type="button" class="reset" onclick="resetCalculator()">RESET</button>
+            <button type="button" class="equal" onclick="calculateResult()">=</button>
+        </form>
+    </div>
+    <script>
+        let display = document.getElementById("display");
+        let currentNum = "";
+        let num1 = "";
+        let num2 = "";
+        let operation = "";
+
+        function appendNumber(num) {
+            currentNum += num;
+            display.textContent = currentNum;
+        }
+
+        function deleteNumber() {
+            currentNum = currentNum.slice(0, -1);
+            display.textContent = currentNum || "0";
+        }
+
+        function setOperation(op) {
+            if (currentNum === "") return; // Prevent setting operation without a number
+            if (num1 !== "" && currentNum !== "") {
+                calculateResult();
+            }
+            num1 = currentNum;
+            operation = op;
+            currentNum = "";
+        }
+
+        function calculateResult() {
+            if (num1 === "" || currentNum === "") return; // Prevent calculation without numbers
+            num2 = currentNum;
+            let result;
+            switch (operation) {
+                case '+':
+                    result = parseFloat(num1) + parseFloat(num2);
+                    break;
+                case '-':
+                    result = parseFloat(num1) - parseFloat(num2);
+                    break;
+                case '*':
+                    result = parseFloat(num1) * parseFloat(num2);
+                    break;
+                case '/':
+                    if (num2 === "0") {
+                        result = "Error";
+                    } else {
+                        result = parseFloat(num1) / parseFloat(num2);
+                    }
+                    break;
+                default:
+                    return;
+            }
+            display.textContent = result;
+            currentNum = result.toString();
+            num1 = "";
+            num2 = "";
+            operation = "";
+        }
+
+        function resetCalculator() {
+            currentNum = "";
+            num1 = "";
+            num2 = "";
+            operation = "";
+            display.textContent = "0";
+        }
+    </script>
+</body>
+</html>
